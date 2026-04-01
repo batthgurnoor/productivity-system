@@ -9,6 +9,14 @@ function statusLabel(s: TaskStatus) {
   return 'Done'
 }
 
+type EditDraft = {
+  title: string
+  description: string
+  status: TaskStatus
+  priority: number
+  dueDate: string // yyyy-mm-dd or ''
+}
+
 export default function TasksPage() {
   const { logout } = useAuth()
   const nav = useNavigate()
@@ -18,7 +26,12 @@ export default function TasksPage() {
   const [error, setError] = useState<string | null>(null)
 
   const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
   const [priority, setPriority] = useState(2)
+  const [dueDate, setDueDate] = useState('') // yyyy-mm-dd or ''
+
+  const [editingId, setEditingId] = useState<number | null>(null)
+  const [draft, setDraft] = useState<EditDraft | null>(null)
 
   async function load() {
     setError(null)
@@ -57,12 +70,16 @@ export default function TasksPage() {
     try {
       const created = await api.createTask({
         title: trimmed,
+        description,
         status: 'TODO',
         priority,
+        dueDate: dueDate ? dueDate : undefined,
       })
       setItems((prev) => [created, ...prev])
       setTitle('')
+      setDescription('')
       setPriority(2)
+      setDueDate('')
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Failed to create task')
     }
@@ -82,6 +99,45 @@ export default function TasksPage() {
   async function remove(t: Task) {
     await api.deleteTask(t.id)
     setItems((prev) => prev.filter((x) => x.id !== t.id))
+  }
+
+  function startEdit(t: Task) {
+    setEditingId(t.id)
+    setDraft({
+      title: t.title,
+      description: t.description ?? '',
+      status: t.status,
+      priority: t.priority,
+      dueDate: t.dueDate ?? '',
+    })
+  }
+
+  function cancelEdit() {
+    setEditingId(null)
+    setDraft(null)
+  }
+
+  async function saveEdit(t: Task) {
+    if (!draft) return
+    const trimmed = draft.title.trim()
+    if (!trimmed) {
+      setError('Title is required')
+      return
+    }
+    setError(null)
+    try {
+      const updated = await api.updateTask(t.id, {
+        title: trimmed,
+        description: draft.description,
+        status: draft.status,
+        priority: draft.priority,
+        dueDate: draft.dueDate ? draft.dueDate : undefined,
+      })
+      setItems((prev) => prev.map((x) => (x.id === t.id ? updated : x)))
+      cancelEdit()
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Failed to update task')
+    }
   }
 
   return (
@@ -107,32 +163,58 @@ export default function TasksPage() {
       <main className="mx-auto max-w-5xl px-4 py-6">
         <form
           onSubmit={onCreate}
-          className="flex flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-900/40 p-4 md:flex-row md:items-end"
+          className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4"
         >
-          <label className="flex-1">
-            <div className="text-sm text-slate-200">New task</div>
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 outline-none focus:border-slate-500"
-              placeholder="e.g. Build login page"
-            />
-          </label>
-          <label className="w-full md:w-44">
-            <div className="text-sm text-slate-200">Priority</div>
-            <select
-              value={priority}
-              onChange={(e) => setPriority(Number(e.target.value))}
-              className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 outline-none focus:border-slate-500"
-            >
-              <option value={1}>High</option>
-              <option value={2}>Medium</option>
-              <option value={3}>Low</option>
-            </select>
-          </label>
-          <button className="rounded-xl bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-400">
-            Add
-          </button>
+          <div className="grid gap-3 md:grid-cols-3 md:items-end">
+            <label className="md:col-span-2">
+              <div className="text-sm text-slate-200">Title</div>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 outline-none focus:border-slate-500"
+                placeholder="e.g. Build login page"
+              />
+            </label>
+
+            <label>
+              <div className="text-sm text-slate-200">Priority</div>
+              <select
+                value={priority}
+                onChange={(e) => setPriority(Number(e.target.value))}
+                className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 outline-none focus:border-slate-500"
+              >
+                <option value={1}>High</option>
+                <option value={2}>Medium</option>
+                <option value={3}>Low</option>
+              </select>
+            </label>
+
+            <label className="md:col-span-2">
+              <div className="text-sm text-slate-200">Description</div>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+                className="mt-1 w-full resize-none rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 outline-none focus:border-slate-500"
+                placeholder="Optional…"
+              />
+            </label>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label>
+                <div className="text-sm text-slate-200">Due date</div>
+                <input
+                  type="date"
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
+                  className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 outline-none focus:border-slate-500"
+                />
+              </label>
+              <button className="mt-6 rounded-xl bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-400">
+                Add
+              </button>
+            </div>
+          </div>
         </form>
 
         {error ? (
@@ -161,20 +243,113 @@ export default function TasksPage() {
                         key={t.id}
                         className="rounded-xl border border-slate-800 bg-slate-950/40 p-3"
                       >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0">
-                            <div className="truncate font-medium">{t.title}</div>
-                            <div className="mt-1 text-xs text-slate-400">
-                              Priority {t.priority}
+                        {editingId === t.id && draft ? (
+                          <div className="space-y-3">
+                            <label className="block">
+                              <div className="text-xs text-slate-300">Title</div>
+                              <input
+                                value={draft.title}
+                                onChange={(e) => setDraft({ ...draft, title: e.target.value })}
+                                className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-2 py-1 text-sm outline-none focus:border-slate-500"
+                              />
+                            </label>
+
+                            <label className="block">
+                              <div className="text-xs text-slate-300">Description</div>
+                              <textarea
+                                value={draft.description}
+                                onChange={(e) =>
+                                  setDraft({ ...draft, description: e.target.value })
+                                }
+                                rows={3}
+                                className="mt-1 w-full resize-none rounded-lg border border-slate-700 bg-slate-950 px-2 py-1 text-sm outline-none focus:border-slate-500"
+                              />
+                            </label>
+
+                            <div className="grid grid-cols-2 gap-2">
+                              <label className="block">
+                                <div className="text-xs text-slate-300">Status</div>
+                                <select
+                                  value={draft.status}
+                                  onChange={(e) =>
+                                    setDraft({ ...draft, status: e.target.value as TaskStatus })
+                                  }
+                                  className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-2 py-1 text-sm outline-none focus:border-slate-500"
+                                >
+                                  <option value="TODO">Todo</option>
+                                  <option value="IN_PROGRESS">In progress</option>
+                                  <option value="DONE">Done</option>
+                                </select>
+                              </label>
+                              <label className="block">
+                                <div className="text-xs text-slate-300">Priority</div>
+                                <select
+                                  value={draft.priority}
+                                  onChange={(e) =>
+                                    setDraft({
+                                      ...draft,
+                                      priority: Number(e.target.value),
+                                    })
+                                  }
+                                  className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-2 py-1 text-sm outline-none focus:border-slate-500"
+                                >
+                                  <option value={1}>High</option>
+                                  <option value={2}>Medium</option>
+                                  <option value={3}>Low</option>
+                                </select>
+                              </label>
+                            </div>
+
+                            <label className="block">
+                              <div className="text-xs text-slate-300">Due date</div>
+                              <input
+                                type="date"
+                                value={draft.dueDate}
+                                onChange={(e) => setDraft({ ...draft, dueDate: e.target.value })}
+                                className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-2 py-1 text-sm outline-none focus:border-slate-500"
+                              />
+                            </label>
+
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                onClick={() => void saveEdit(t)}
+                                className="rounded-lg bg-indigo-500 px-2 py-1 text-xs font-medium text-white hover:bg-indigo-400"
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={cancelEdit}
+                                className="rounded-lg border border-slate-800 bg-slate-900 px-2 py-1 text-xs hover:bg-slate-800"
+                              >
+                                Cancel
+                              </button>
                             </div>
                           </div>
-                          <button
-                            onClick={() => void remove(t)}
-                            className="rounded-lg border border-slate-800 bg-slate-900 px-2 py-1 text-xs hover:bg-slate-800"
-                          >
-                            Delete
-                          </button>
-                        </div>
+                        ) : (
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <div className="truncate font-medium">{t.title}</div>
+                              <div className="mt-1 text-xs text-slate-400">
+                                Priority {t.priority}
+                                {t.dueDate ? ` • Due ${t.dueDate}` : ''}
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => startEdit(t)}
+                                className="rounded-lg border border-slate-800 bg-slate-900 px-2 py-1 text-xs hover:bg-slate-800"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => void remove(t)}
+                                className="rounded-lg border border-slate-800 bg-slate-900 px-2 py-1 text-xs hover:bg-slate-800"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        )}
 
                         <div className="mt-3 flex flex-wrap gap-2">
                           {s !== 'TODO' ? (
