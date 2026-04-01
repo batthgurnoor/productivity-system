@@ -10,7 +10,7 @@ A full-stack productivity app. Phase 1 ships a complete MVP: **JWT auth + task C
 
 ## Features
 
-### Phase 1 (MVP) ✅
+### Phase 1 (MVP) 
 
 - **Authentication**
   - Register + login
