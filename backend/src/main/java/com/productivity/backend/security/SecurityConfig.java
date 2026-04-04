@@ -47,6 +47,8 @@ public class SecurityConfig {
 			.csrf(csrf -> csrf.disable())
 			.cors(Customizer.withDefaults())
 			.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+			// JWT-only API: no anonymous principal, so missing/invalid tokens yield 401 (not 403).
+			.anonymous(anonymous -> anonymous.disable())
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/api/auth/**").permitAll()
 				.requestMatchers("/h2-console/**").permitAll()

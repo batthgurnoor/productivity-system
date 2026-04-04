@@ -37,34 +37,37 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-full flex items-center justify-center px-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl shadow-black/40">
-        <div className="mb-6">
+    <div className="flex min-h-full items-center justify-center px-4 py-10">
+      <div className="glass w-full max-w-lg rounded-3xl p-6 sm:p-10">
+        <div className="mb-8 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">
             {mode === 'register' ? 'Create your account' : 'Welcome back'}
           </h1>
-          <p className="mt-1 text-sm text-slate-300">
+          <p className="mt-2 text-sm text-slate-300">
             {mode === 'register'
               ? 'Sign up to start tracking tasks.'
               : 'Log in to manage your tasks.'}
           </p>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-4">
+        <form
+          onSubmit={onSubmit}
+          className="mx-auto w-full max-w-[20rem] space-y-5"
+        >
           <label className="block">
-            <span className="text-sm text-slate-200">Email</span>
+            <span className="text-base font-medium text-slate-100">Email</span>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               autoComplete="email"
               required
-              className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-slate-100 outline-none ring-0 focus:border-slate-500"
+              className="mt-2 w-full rounded-xl border border-slate-700/80 bg-slate-950/70 px-3 py-2.5 text-slate-100 outline-none ring-0 focus:border-indigo-400/70 focus:outline-none"
             />
           </label>
 
           <label className="block">
-            <span className="text-sm text-slate-200">Password</span>
+            <span className="text-base font-medium text-slate-100">Password</span>
             <input
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -72,13 +75,16 @@ export default function AuthPage() {
               autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
               required
               minLength={8}
-              className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-slate-100 outline-none ring-0 focus:border-slate-500"
+              className="mt-2 w-full rounded-xl border border-slate-700/80 bg-slate-950/70 px-3 py-2.5 text-slate-100 outline-none ring-0 focus:border-indigo-400/70 focus:outline-none"
             />
-            <p className="mt-1 text-xs text-slate-400">Minimum 8 characters.</p>
+            <p className="mt-1.5 text-xs text-slate-400">Minimum 8 characters.</p>
           </label>
 
           {error ? (
-            <div className="rounded-xl border border-red-900/50 bg-red-950/40 px-3 py-2 text-sm text-red-200">
+            <div
+              role="alert"
+              className="rounded-xl border border-red-500/50 bg-red-950/70 px-3 py-2 text-sm font-medium text-red-400"
+            >
               {error}
             </div>
           ) : null}
@@ -86,7 +92,7 @@ export default function AuthPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-indigo-500 px-3 py-2 font-medium text-white shadow hover:bg-indigo-400 disabled:opacity-60"
+            className="w-full rounded-xl bg-indigo-500 px-3 py-2.5 text-base font-medium text-white shadow-sm shadow-indigo-500/20 hover:bg-indigo-400 disabled:opacity-60"
           >
             {loading
               ? 'Please wait...'
@@ -96,7 +102,7 @@ export default function AuthPage() {
           </button>
         </form>
 
-        <div className="mt-5 text-sm text-slate-300">
+        <div className="mx-auto mt-6 max-w-[20rem] text-center text-sm text-slate-300">
           {mode === 'register' ? (
             <>
               Already have an account?{' '}

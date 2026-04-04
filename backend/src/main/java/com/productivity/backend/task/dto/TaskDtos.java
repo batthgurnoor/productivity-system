@@ -41,16 +41,16 @@ public class TaskDtos {
 		@NotBlank @Size(max = 200) String title,
 		@Size(max = 2000) String description,
 		@NotNull TaskStatus status,
-		@Min(1) @Max(3) int priority,
-		LocalDate dueDate
+		@NotNull @Min(1) @Max(3) Integer priority,
+		@NotNull LocalDate dueDate
 	) {}
 
 	public record UpdateTaskRequest(
 		@NotBlank @Size(max = 200) String title,
 		@Size(max = 2000) String description,
 		@NotNull TaskStatus status,
-		@Min(1) @Max(3) int priority,
-		LocalDate dueDate
+		@NotNull @Min(1) @Max(3) Integer priority,
+		@NotNull LocalDate dueDate
 	) {}
 }
 

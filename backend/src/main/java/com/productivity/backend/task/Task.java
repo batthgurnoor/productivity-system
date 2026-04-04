@@ -39,6 +39,7 @@ public class Task {
 	@Column(nullable = false)
 	private int priority = 2; // 1=high, 2=medium, 3=low
 
+	@Column(nullable = false)
 	private LocalDate dueDate;
 
 	@Column(nullable = false)

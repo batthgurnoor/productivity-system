@@ -66,7 +66,7 @@ export const api = {
     description?: string
     status: TaskStatus
     priority: number
-    dueDate?: string
+    dueDate: string
   }) =>
     request<Task>('/api/tasks', {
       method: 'POST',
@@ -75,7 +75,7 @@ export const api = {
         description: input.description ?? '',
         status: input.status,
         priority: input.priority,
-        dueDate: input.dueDate ?? null,
+        dueDate: input.dueDate,
       }),
     }),
   updateTask: (
@@ -85,7 +85,7 @@ export const api = {
       description?: string
       status: TaskStatus
       priority: number
-      dueDate?: string
+      dueDate: string
     },
   ) =>
     request<Task>(`/api/tasks/${id}`, {
@@ -95,7 +95,7 @@ export const api = {
         description: input.description ?? '',
         status: input.status,
         priority: input.priority,
-        dueDate: input.dueDate ?? null,
+        dueDate: input.dueDate,
       }),
     }),
   deleteTask: (id: number) =>

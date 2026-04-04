@@ -1,18 +1,68 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 @layer base {
-  html,
-  body,
-  #root {
-    height: 100%;
+  /*
+   * Avoid double vertical scrollbars: overflow-x: hidden on body makes overflow-y
+   * resolve to auto, so both html and body scroll. Clip horizontally on html only
+   * and let the document grow with min-height instead of fixed height chains.
+   */
+  html {
+    overflow-x: clip;
+    min-height: 100%;
   }
 
   body {
-    background-color: #020617;
+    margin: 0;
+    min-height: 100%;
+    background:
+      radial-gradient(1200px 800px at 20% 10%, rgba(99, 102, 241, 0.18), transparent 60%),
+      radial-gradient(900px 700px at 80% 30%, rgba(16, 185, 129, 0.10), transparent 55%),
+      radial-gradient(700px 700px at 30% 90%, rgba(236, 72, 153, 0.08), transparent 60%),
+      #020617;
     color: #f8fafc;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    min-height: 100%;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(2, 6, 23, 0.58);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    box-shadow:
+      0 20px 50px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(14px);
+  }
+
+  /*
+   * Priority strip colors live here so they always ship (Tailwind may not detect
+   * class names built only inside TS helper return strings).
+   */
+  .task-card-priority-strip {
+    width: 0.375rem;
+    flex-shrink: 0;
+    align-self: stretch;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+  }
+
+  .task-card-priority-strip--1 {
+    background-image: linear-gradient(to bottom, #fb7185, #e11d48);
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .task-card-priority-strip--2 {
+    background-image: linear-gradient(to bottom, #fbbf24, #d97706);
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.15);
+  }
+
+  .task-card-priority-strip--3 {
+    background-image: linear-gradient(to bottom, #94a3b8, #475569);
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.2);
   }
 }
