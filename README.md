@@ -247,7 +247,7 @@ Create / update body (description can be empty string; title max 200 chars, desc
 - **CORS:** Origins are matched with patterns like `http://localhost:*` so Vite isn’t tied to a single port.  
 - **403 on `/api/tasks`:** Usually missing or expired JWT, or the client wasn’t sending `Authorization`. After a backend restart, old tokens can be invalid if the signing secret changed.  
 - **Port already in use:** Change `server.port` or stop whatever is bound to **8081**.  
-- **Tailwind:** If responsive classes (e.g. `md:grid-cols-3`) never apply, check that `index.css` uses `@import 'tailwindcss';` for v4—not the legacy `@tailwind` three-liner.
+- **Tailwind:** If responsive classes (e.g. `md:grid-cols-3`) never apply, check that `index.css` uses `@import 'tailwindcss';` for v4
 
 ---
 
