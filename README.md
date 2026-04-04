@@ -1,6 +1,6 @@
 # Smart Task & Productivity System
 
-This is something I’ve been putting together as a personal productivity tool: a small full-stack app where I can sign in, dump tasks onto a board, and drag my attention across **Todo → In progress → Done** without living inside someone else’s SaaS. Right now it’s **Phase 1**—a working MVP with real auth and persistence behind a simple UI. Later I’d like to add analytics and maybe some AI-assisted planning, but the foundation is deliberately boring and reliable: Spring Boot + React, JWT in front of a REST API, tasks scoped per user.
+This is something I’ve been putting together as a personal productivity tool: a small full-stack app where I can sign in, dump tasks onto a board, and drag my attention across **Todo → In progress → Done** without living inside someone else’s SaaS. Right now it’s **Phase 1**—a working MVP with real auth and persistence behind a simple UI. Later I’d like to add analytics and maybe some AI-assisted planning, but the foundation is deliberately boring and reliable: Spring Boot + React, JWT in front of a REST API, tasks scoped per user. **I intend to open source it** once I’m happy with the shape of the codebase and have picked a license—if you’re reading this early, thanks for looking before it’s fully “public-ready.”
 
 If you clone this and run it locally, you get the same setup I use for development: in-memory H2, Vite on the front, and CORS tuned so whatever port Vite picks still talks to the API.
 
@@ -259,4 +259,4 @@ Create / update body (description can be empty string; title max 200 chars, desc
 
 ## License
 
-None chosen yet.
+Not picked yet—I’ll add one when I actually flip the repo to public.
