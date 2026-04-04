@@ -54,7 +54,7 @@ Validation is enforced in two places: the browser (required fields, sensible mes
 
 ---
 
-## Repo layout
+## Folder Structure
 
 Generated and third-party folders are left out (`node_modules/`, `frontend/dist/`, `backend/target/`, etc.). Everything else looks like this:
 
