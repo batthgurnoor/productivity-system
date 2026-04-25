@@ -307,11 +307,11 @@ export default function TasksPage() {
           </div>
         ) : null}
 
-        <div className="mt-8 grid grid-cols-1 gap-6 px-1 md:grid-cols-3 md:gap-8 md:px-0">
+        <div className="mt-8 grid grid-cols-1 items-start gap-6 px-1 md:grid-cols-3 md:gap-8 md:px-0">
           {(['TODO', 'IN_PROGRESS', 'DONE'] as TaskStatus[]).map((s) => (
             <section
               key={s}
-              className="glass flex min-h-0 min-w-0 flex-col rounded-3xl md:min-h-[12rem]"
+              className="glass min-w-0 self-start rounded-3xl"
             >
               <div className="flex shrink-0 items-center justify-between border-b border-slate-800/60 px-4 py-3.5">
                 <div className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-slate-500">
@@ -322,7 +322,7 @@ export default function TasksPage() {
                 </div>
               </div>
 
-              <div className="flex min-h-0 flex-1 flex-col p-4 sm:p-5">
+              <div className="p-4 sm:p-5">
                 {loading ? (
                   <div className="rounded-2xl border border-dashed border-slate-800/80 bg-slate-950/20 px-4 py-8 text-center text-sm text-slate-500">
                     Loading…
@@ -333,7 +333,7 @@ export default function TasksPage() {
                     <p className="mt-1 text-xs text-slate-600">Add one in the form above</p>
                   </div>
                 ) : (
-                  <ul className="m-0 flex min-h-0 flex-1 list-none flex-col gap-5 p-0">
+                  <ul className="m-0 list-none space-y-5 p-0">
                     {byStatus[s].map((t) => {
                       const accentP =
                         editingId === t.id && draft ? draft.priority : t.priority
