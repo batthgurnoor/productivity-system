@@ -1,0 +1,71 @@
+name: Bug report
+description: Report something that isn't working as expected
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this.
+        Please share enough detail so someone else can reproduce the issue.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One clear sentence describing the bug
+      placeholder: The task board columns overlap when ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current behavior
+      description: What happens right now?
+      placeholder: When I click ..., the app ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+      placeholder: I expected ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: A short step-by-step list
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. See error ...
+    validations:
+      required: true
+
+  - type: input
+    id: backend-env
+    attributes:
+      label: Backend environment
+      description: Java version, backend port, and relevant config details
+      placeholder: Java 17, backend on :8081
+
+  - type: input
+    id: frontend-env
+    attributes:
+      label: Frontend/browser environment
+      description: OS, browser, and frontend URL/port
+      placeholder: Windows 11, Chrome 135, http://localhost:5173
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots (optional)
+      description: Paste stack traces or attach screenshots if useful
+

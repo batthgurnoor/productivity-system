@@ -1,0 +1,72 @@
+name: Feature request
+description: Suggest an idea or improvement for the project
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion.
+        Please keep this focused so it can be discussed and shipped in small steps.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or pain point
+      description: What is hard or missing today?
+      placeholder: Right now it's hard to ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What change do you want to see?
+      placeholder: Add ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered (optional)
+      description: Any other approaches you considered
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Suggested scope
+      description: Keep this concise and implementation-friendly
+      placeholder: |
+        - Frontend only
+        - Touch files A/B
+        - No backend/API change
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How do we know this is done?
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Frontend
+        - Backend
+        - Docs
+        - DevOps
+        - Mixed
+    validations:
+      required: true
+
