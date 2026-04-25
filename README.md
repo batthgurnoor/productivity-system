@@ -1,12 +1,14 @@
 # Smart Task & Productivity System
 
-This is something I’ve been putting together as a personal productivity tool: a small full-stack app where I can sign in, dump tasks onto a board, and drag my attention across **Todo → In progress → Done** without living inside someone else’s SaaS. Right now it’s **Phase 1**—a working MVP with real auth and persistence behind a simple UI. Later I’d like to add analytics and maybe some AI-assisted planning, but the foundation is deliberately boring and reliable: Spring Boot + React, JWT in front of a REST API, tasks scoped per user. **I intend to open source it** once I’m happy with the shape of the codebase and have picked a license—if you’re reading this early, thanks for looking before it’s fully “public-ready.”
+This is something I’ve been putting together as a personal productivity tool: a small full-stack app where I can sign in, dump tasks onto a board, and drag my attention across **Todo → In progress → Done** without living inside someone else’s SaaS. **Phase 1** is a working MVP: auth, task CRUD, and the board UI. **Phase 2** has started with a read-only **analytics summary** (counts, overdue, completions by day). I still want richer analytics later, plus AI-assisted planning down the road. Stack stays boring on purpose: Spring Boot + React, JWT in front of a REST API, tasks scoped per user. **I intend to open source it** once I’m happy with the shape of the codebase and have picked a license—if you’re reading this early, thanks for looking before it’s fully “public-ready.”
 
 If you clone this and run it locally, you get the same setup I use for development: in-memory H2, Vite on the front, and CORS tuned so whatever port Vite picks still talks to the API.
 
+Open-source docs: [Contributing](CONTRIBUTING.md) · [Code of Conduct](CODE_OF_CONDUCT.md) · [Security Policy](SECURITY.md)
+
 ---
 
-## What it actually does (Phase 1)
+## What it actually does
 
 You register or log in. The backend issues a **JWT**; the SPA keeps it in `localStorage` and sends `Authorization: Bearer …` on every task call. Tasks belong to **your** account only—no shared workspace yet.
 
@@ -20,6 +22,17 @@ Validation is enforced in two places: the browser (required fields, sensible mes
 
 **Heads-up:** H2 is in-memory. Restart the backend and the database is empty again—fine for dev, not for “real” data until I wire up Postgres (it’s on the roadmap).
 
+### Analytics (Phase 2, first slice)
+
+There’s an **Analytics** page in the nav (same JWT session as Tasks). You pick a **from/to** date range (defaults to the last 30 days) and get:
+
+- How many tasks were **created** and **marked done** in that window (using `createdAt` / `completedAt` in the **JVM default timezone**).
+- **Overdue**: not done, due date **strictly before today** (same timezone as the server).
+- **Board snapshot**: current counts in Todo / In progress / Done (all your tasks, not filtered by the range).
+- A simple **bar strip** of completions per calendar day in the range (days with zero completions still show as a flat tick).
+
+The API rejects ranges over **366 days** or `from` after `to` with HTTP 400.
+
 ---
 
 ## Features
@@ -31,13 +44,17 @@ Validation is enforced in two places: the browser (required fields, sensible mes
 | Auth | Register, login, JWT access token (default lifetime **60 minutes** in `application.properties`). |
 | Tasks | Create, list, update, delete; statuses `TODO`, `IN_PROGRESS`, `DONE`; priority **1–3** (high → low). |
 | Due dates | **Required** on create and update (`LocalDate` in the API, `yyyy-mm-dd` in JSON). |
-| Frontend | React 19, TypeScript, Vite, React Router; protected `/tasks` route; Tailwind for styling. |
+| Frontend | React 19, TypeScript, Vite, React Router; protected `/tasks` and `/analytics`; Tailwind for styling. |
 | Backend | Spring Boot, Spring Security + custom JWT filter, JPA, H2 for local dev, H2 console enabled. |
 
-### Phase 2 (ideas)
+### Phase 2 (in progress)
 
-- Analytics: completed per day/week, overdue counts, completion rate, simple streaks, average time to complete.
-- Filters and a date range on whatever dashboard that becomes.
+| Area | What’s there |
+|------|----------------|
+| Analytics API | `GET /api/analytics/summary` with optional `from` / `to` query params (`yyyy-mm-dd`). |
+| Analytics UI | Summary cards, board counts, completions-by-day bars, date range + refresh. |
+
+**Still on the wish list for Phase 2+:** streaks, average time-to-complete, export, charts library, filters beyond the date range.
 
 ### Phase 3+ (ideas)
 
@@ -60,8 +77,12 @@ Generated and third-party folders are left out (`node_modules/`, `frontend/dist/
 
 ```
 .
+├── .github/
 ├── .gitignore
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
 ├── README.md
+├── SECURITY.md
 ├── backend/
 │   ├── .gitignore
 │   ├── .mvn/
@@ -74,6 +95,10 @@ Generated and third-party folders are left out (`node_modules/`, `frontend/dist/
 │       ├── main/
 │       │   ├── java/com/productivity/backend/
 │       │   │   ├── BackendApplication.java
+│       │   │   ├── analytics/
+│       │   │   │   ├── AnalyticsController.java
+│       │   │   │   ├── AnalyticsDtos.java
+│       │   │   │   └── AnalyticsService.java
 │       │   │   ├── auth/
 │       │   │   │   ├── AuthController.java
 │       │   │   │   └── dto/
@@ -120,6 +145,8 @@ Generated and third-party folders are left out (`node_modules/`, `frontend/dist/
         ├── main.tsx
         ├── vite-env.d.ts
         ├── App.tsx
+        ├── components/
+        │   └── AppHeader.tsx
         ├── assets/
         │   ├── react.svg
         │   └── vite.svg
@@ -133,6 +160,7 @@ Generated and third-party folders are left out (`node_modules/`, `frontend/dist/
         │   ├── env.ts
         │   └── storage.ts
         ├── pages/
+        │   ├── AnalyticsPage.tsx
         │   ├── AuthPage.tsx
         │   └── TasksPage.tsx
         └── routing/
@@ -180,7 +208,7 @@ If the backend port changes, update this to match.
 
 ---
 
-## API reference (Phase 1)
+## API reference
 
 ### Auth (no JWT)
 
@@ -230,6 +258,30 @@ Create / update body (description can be empty string; title max 200 chars, desc
 `priority` must be **1**, **2**, or **3**.  
 `dueDate` is **required** (ISO date `yyyy-mm-dd`).
 
+### Analytics summary (JWT required)
+
+`GET /api/analytics/summary`  
+Optional query: `from`, `to` (`yyyy-mm-dd`, inclusive). If omitted, defaults to **today** as `to` and **29 days earlier** as `from` (30 calendar days inclusive).
+
+Example: `GET /api/analytics/summary?from=2026-03-01&to=2026-04-03`
+
+Response shape (abbreviated):
+
+```json
+{
+  "from": "2026-03-01",
+  "to": "2026-04-03",
+  "createdInRange": 12,
+  "completedInRange": 7,
+  "overdueNotDone": 2,
+  "byStatus": { "TODO": 3, "IN_PROGRESS": 1, "DONE": 14 },
+  "completionsByDay": [
+    { "date": "2026-03-01", "count": 0 },
+    { "date": "2026-03-02", "count": 1 }
+  ]
+}
+```
+
 ---
 
 ## Quick manual test
@@ -253,7 +305,8 @@ Create / update body (description can be empty string; title max 200 chars, desc
 
 ## Roadmap (rough)
 
-- [ ] Phase 2: analytics API + dashboard  
+- [x] Phase 2 (v1): analytics summary API + dashboard page  
+- [ ] Phase 2+: streaks, richer charts, time-to-complete, filters  
 - [ ] Postgres (or similar) instead of H2 for data that survives restarts  
 - [ ] Deploy backend + frontend somewhere sensible  
 
