@@ -49,6 +49,20 @@ export type Task = {
   completedAt: string | null
 }
 
+export type AnalyticsSummary = {
+  from: string
+  to: string
+  createdInRange: number
+  completedInRange: number
+  overdueNotDone: number
+  byStatus: {
+    TODO: number
+    IN_PROGRESS: number
+    DONE: number
+  }
+  completionsByDay: { date: string; count: number }[]
+}
+
 export const api = {
   register: (email: string, password: string) =>
     request<AuthResponse>('/api/auth/register', {
@@ -100,5 +114,13 @@ export const api = {
     }),
   deleteTask: (id: number) =>
     request<void>(`/api/tasks/${id}`, { method: 'DELETE' }),
+  analyticsSummary: (params?: { from?: string; to?: string }) => {
+    const q = new URLSearchParams()
+    if (params?.from) q.set('from', params.from)
+    if (params?.to) q.set('to', params.to)
+    const qs = q.toString()
+    const suffix = qs ? `?${qs}` : ''
+    return request<AnalyticsSummary>(`/api/analytics/summary${suffix}`)
+  },
 }
 

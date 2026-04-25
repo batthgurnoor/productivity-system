@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
+import AppHeader from '../components/AppHeader'
 import { api, ApiError, type Task, type TaskStatus } from '../lib/api'
 import { useAuth } from '../auth/useAuth'
 
@@ -226,23 +227,7 @@ export default function TasksPage() {
 
   return (
     <div className="min-h-full">
-      <header className="sticky top-0 z-10 border-b border-slate-800/70 bg-slate-950/55 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3">
-          <div>
-            <div className="text-sm text-slate-400">Phase 1 MVP</div>
-            <div className="text-lg font-semibold">Tasks</div>
-          </div>
-          <button
-            onClick={() => {
-              logout()
-              nav('/auth', { replace: true })
-            }}
-            className="rounded-xl border border-slate-800 bg-slate-900/70 px-3 py-2 text-sm hover:bg-slate-800/70"
-          >
-            Log out
-          </button>
-        </div>
-      </header>
+      <AppHeader title="Tasks" subtitle="Phase 1 · Board" />
 
       <main className="mx-auto max-w-6xl px-4 py-6">
         <div className="mx-auto w-full max-w-lg">
