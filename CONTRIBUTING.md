@@ -42,6 +42,10 @@ A good PR usually includes:
 - Testing notes (what you ran manually or automated).
 - Screenshots/GIFs if there are UI changes.
 
+## License
+
+By contributing to this repository, you agree that your contributions will be licensed under the project’s [MIT License](LICENSE).
+
 ## Coding style (lightweight)
 
 - Match the existing style in the file you touch.

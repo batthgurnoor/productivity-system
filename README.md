@@ -1,10 +1,10 @@
 # Smart Task & Productivity System
 
-This is something I’ve been putting together as a personal productivity tool: a small full-stack app where I can sign in, dump tasks onto a board, and drag my attention across **Todo → In progress → Done** without living inside someone else’s SaaS. **Phase 1** is a working MVP: auth, task CRUD, and the board UI. **Phase 2** has started with a read-only **analytics summary** (counts, overdue, completions by day). I still want richer analytics later, plus AI-assisted planning down the road. Stack stays boring on purpose: Spring Boot + React, JWT in front of a REST API, tasks scoped per user. **I intend to open source it** once I’m happy with the shape of the codebase and have picked a license—if you’re reading this early, thanks for looking before it’s fully “public-ready.”
+This is something I’ve been putting together as a personal productivity tool: a small full-stack app where I can sign in, dump tasks onto a board, and drag my attention across **Todo → In progress → Done** without living inside someone else’s SaaS. **Phase 1** is a working MVP: auth, task CRUD, and the board UI. **Phase 2** has started with a read-only **analytics summary** (counts, overdue, completions by day). I still want richer analytics later, plus AI-assisted planning down the road. Stack stays boring on purpose: Spring Boot + React, JWT in front of a REST API, tasks scoped per user. It’s now open-sourced under the **MIT License**.
 
 If you clone this and run it locally, you get the same setup I use for development: in-memory H2, Vite on the front, and CORS tuned so whatever port Vite picks still talks to the API.
 
-Open-source docs: [Contributing](CONTRIBUTING.md) · [Code of Conduct](CODE_OF_CONDUCT.md) · [Security Policy](SECURITY.md)
+Open-source docs: [License](LICENSE) · [Contributing](CONTRIBUTING.md) · [Code of Conduct](CODE_OF_CONDUCT.md) · [Security Policy](SECURITY.md)
 
 ---
 
@@ -81,6 +81,7 @@ Generated and third-party folders are left out (`node_modules/`, `frontend/dist/
 ├── .gitignore
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
+├── LICENSE
 ├── README.md
 ├── SECURITY.md
 ├── backend/
@@ -312,4 +313,4 @@ Response shape (abbreviated):
 
 ## License
 
-Not picked yet—I’ll add one when I actually flip the repo to public.
+This project is licensed under the [MIT License](LICENSE).
