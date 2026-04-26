@@ -1,6 +1,6 @@
 ## Summary
 
-What changed, in plain English?
+What changed?
 
 ## Why this change
 
