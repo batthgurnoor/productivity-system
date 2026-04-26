@@ -84,7 +84,10 @@ Generated and third-party folders are left out (`node_modules/`, `frontend/dist/
 ├── LICENSE
 ├── README.md
 ├── SECURITY.md
+├── docker-compose.yml
 ├── backend/
+│   ├── .dockerignore
+│   ├── Dockerfile
 │   ├── .gitignore
 │   ├── .mvn/
 │   │   └── wrapper/
@@ -132,6 +135,10 @@ Generated and third-party folders are left out (`node_modules/`, `frontend/dist/
     ├── index.html
     ├── package.json
     ├── package-lock.json
+    ├── Dockerfile
+    ├── .dockerignore
+    ├── nginx/
+    │   └── default.conf
     ├── postcss.config.js
     ├── tailwind.config.js
     ├── tsconfig.json
@@ -206,6 +213,25 @@ VITE_API_BASE_URL=http://localhost:8081
 ```
 
 If the backend port changes, update this to match.
+
+### Docker (optional)
+
+If you have **Docker Desktop** (or Docker Engine + Compose v2), you can run both apps without installing Java or Node locally for that session.
+
+From the repo root:
+
+```powershell
+docker compose up --build
+```
+
+Then open:
+
+- **Web UI:** `http://localhost:5173` (nginx serves the built SPA; port **5173** on your machine maps to port **80** in the container)
+- **API:** `http://localhost:8081`
+
+The frontend image is built with `VITE_API_BASE_URL=http://localhost:8081` so the browser talks to the API on your host (not inside the Docker network). That matches how this project is usually run in dev.
+
+First build can take a few minutes while Maven and npm download dependencies.
 
 ---
 
@@ -301,6 +327,7 @@ Response shape (abbreviated):
 - **403 on `/api/tasks`:** Usually missing or expired JWT, or the client wasn’t sending `Authorization`. After a backend restart, old tokens can be invalid if the signing secret changed.  
 - **Port already in use:** Change `server.port` or stop whatever is bound to **8081**.  
 - **Tailwind:** If responsive classes (e.g. `md:grid-cols-3`) never apply, check that `index.css` uses `@import 'tailwindcss';` for v4
+- **Docker:** If `docker compose up` fails, make sure Docker Desktop is running and ports **5173** and **8081** are free.
 
 ---
 
