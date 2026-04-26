@@ -2,12 +2,12 @@
 
 Thanks for checking out this repo and thinking about contributing.
 
-This project started as my own productivity system, and I�m opening it up as it becomes stable. I want contributions to be practical, respectful, and easy to review.
+This project started as my own productivity system, and I'm opening it up as it becomes stable. I want contributions to be practical, respectful, and easy to review.
 
 ## Before you start
 
 - Read the `README.md` so you understand the current scope and roadmap.
-- If you�re planning a bigger change, open an issue first so we can align on direction.
+- If you're planning a bigger change, open an issue first so we can align on direction.
 - Keep changes focused. Small PRs are much easier to review and merge.
 
 ## Setup
@@ -46,14 +46,14 @@ A good PR usually includes:
 
 ## License
 
-By contributing to this repository, you agree that your contributions will be licensed under the project�s [MIT License](LICENSE).
+By contributing to this repository, you agree that your contributions will be licensed under the project's [MIT License](LICENSE).
 
 ## Coding style (lightweight)
 
 - Match the existing style in the file you touch.
 - Prefer readable code over clever code.
 - Add/adjust docs when behavior changes.
-- Don�t add unrelated refactors in the same PR.
+- Don't add unrelated refactors in the same PR.
 
 ## Good first contributions
 
@@ -64,4 +64,4 @@ By contributing to this repository, you agree that your contributions will be li
 
 ## Questions
 
-If anything is unclear, open an issue and ask. I�d rather answer early than untangle assumptions later.
+If anything is unclear, open an issue and ask. I'd rather answer early than untangle assumptions later.
